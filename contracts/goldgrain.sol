@@ -65,15 +65,15 @@ contract goldgrain is Owned{
         
         if(msg.value == 1 ether){
             
-            uint256 random_num = rand(10000);
+            uint256 random_num = rand(100);
             
-            if(random_num == 888){
+            if(random_num == 88){
                 
                 if(winner == address(0)){
                     
                     winner = msg.sender;
                     
-                    msg.sender.transfer(666 ether);
+                    msg.sender.transfer(66 ether);
                     
                 }
                 
