@@ -70,6 +70,10 @@ contract Redpacket is Owned{
     // Current red packet index
     uint index ;
     
+    address[] addressArray;
+    
+    mapping(address => uint) addressmap;
+    
   
      constructor(address _fcContractAddress) public {
          
@@ -78,7 +82,6 @@ contract Redpacket is Owned{
         index = 1;
         
     }
-    
     
     
     function setPackeNumber(uint _newNumber) public onlyOwner returns(bool success){
@@ -136,32 +139,45 @@ contract Redpacket is Owned{
             redPacketSize = _balance;
                 
             singleRedPacketSize = _balance.div(redPacketNumber);
-                
+            
+            addressArray = new address[](redPacketNumber);
+            
         }
         
-        if(redPacketSize > 0 ){
+        require(redPacketSize > 0);
+        
+        require(addressmap[msg.sender] == 0);
             
-             _fcContract.transfer(msg.sender, singleRedPacketSize);
+        _fcContract.transfer(msg.sender, singleRedPacketSize);
     
+        addressArray[index-1] = msg.sender;
+            
+        addressmap[msg.sender] = singleRedPacketSize;
+            
         
-            if(index == redPacketNumber){
+        if(index == redPacketNumber){
             
-                index = 1;
+            index = 1;
             
-                redPacketSize = 0;
+            redPacketSize = 0;
             
-                singleRedPacketSize = 0;
-            
-            
-            }else{
-            
-                index ++;
-            
+            singleRedPacketSize = 0;
+                
+            for(uint i=0 ;i <addressArray.length ; i++){
+                    
+                delete addressmap[addressArray[i]];
             }
+                
+            delete addressArray;
+            
+        }else{
+            
+           index ++;
             
         }
+            
        
-        
+      
         
     }
     
